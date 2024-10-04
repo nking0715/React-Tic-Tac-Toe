@@ -40,7 +40,6 @@ const App = () => {
       if(newCrossArray.length + circleArray.length === 9 && !isWin(newCrossArray)) setWinner('Tie');
       if (newCrossArray.length > 2 && isWin(newCrossArray)) setWinner('Cross');
     }
-    if(circleArray.length + crossArray.length === 9 && winner === null) setWinner('Tie');
     setTurn(!turn);
   }
   return (
