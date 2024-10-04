@@ -32,22 +32,28 @@ const App = () => {
     if (turn) {
       const newCircleArray = [...circleArray, item];
       setCircleArray(newCircleArray);
+      if(newCircleArray.length + crossArray.length === 9 && !isWin(newCircleArray)) setWinner('Tie');
       if (newCircleArray.length > 2 && isWin(newCircleArray)) setWinner('Circle');
     } else {
       const newCrossArray = [...crossArray, item];
       setCrossArray(newCrossArray);
+      if(newCrossArray.length + circleArray.length === 9 && !isWin(newCrossArray)) setWinner('Tie');
       if (newCrossArray.length > 2 && isWin(newCrossArray)) setWinner('Cross');
     }
+    if(circleArray.length + crossArray.length === 9 && winner === null) setWinner('Tie');
     setTurn(!turn);
   }
   return (
     <div className="App">
       <header className="App-header">
+        <div>
+          {turn ? 'It\'s ⭕\'s turn' : 'It\'s ❌\'s turn'}
+        </div>
         <div className='button-container'>
           <button onClick={reset}>Restart</button>
         </div>
         <div>
-          {winner == null ? '' : winner == 'Cross' ? 'Cross won, please restart.' : 'Circle won, please restart.'}
+          {winner === null ? '' : winner === 'Cross' ? '❌ won, please restart.' : winner === 'Circle' ? '⭕ won, please restart.' : 'Tied, please restart.'}
         </div>
         <div className='item-box'>
           {items.map((item) =>
