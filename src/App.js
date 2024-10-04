@@ -1,22 +1,61 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [turn, setTurn] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [crossArray, setCrossArray] = useState([]);
+  const [circleArray, setCircleArray] = useState([]);
+
+  const items = [11, 12, 13, 21, 122, 23, 31, 32, 33];
+  const winArray = [36, 63, 69, 96, 166];
+
+  const isWin = (array) => {
+    for (let i = 0; i < array.length - 1; i++) {
+      for (let j = i + 1; j < array.length - 1; j++) {
+        let sum = array[i] + array[j] + array[array.length - 1];
+        if (winArray.includes(sum)) return true;
+      }
+    }
+    return false;
+  }
+
+  const reset = () => {
+    setTurn(Math.random() > 0.5);
+    setCrossArray([]);
+    setCircleArray([]);
+    setWinner(null);
+  }
+
+  const handleTick = (item) => {
+    if (circleArray.includes(item) || crossArray.includes(item)) return;
+    if (turn) {
+      const newCircleArray = [...circleArray, item];
+      setCircleArray(newCircleArray);
+      if (newCircleArray.length > 2 && isWin(newCircleArray)) setWinner('Circle');
+    } else {
+      const newCrossArray = [...crossArray, item];
+      setCrossArray(newCrossArray);
+      if (newCrossArray.length > 2 && isWin(newCrossArray)) setWinner('Cross');
+    }
+    setTurn(!turn);
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className='button-container'>
+          <button onClick={reset}>Restart</button>
+        </div>
+        <div>
+          {winner == null ? '' : winner == 'Cross' ? 'Cross won, please restart.' : 'Circle won, please restart.'}
+        </div>
+        <div className='item-box'>
+          {items.map((item) =>
+            <button key={item} className='item' onClick={winner == null ? () => handleTick(item) : null}>
+              {crossArray.includes(item) ? <span>❌</span> : circleArray.includes(item) ? <span>⭕</span> : <span></span>}
+            </button>
+          )}
+        </div>
       </header>
     </div>
   );
